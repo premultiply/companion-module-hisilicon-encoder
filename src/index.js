@@ -30,6 +30,7 @@ class HisiliconEncoderInstance extends InstanceBase {
 			memorytotal: null,
 			net_packet_sent: null,
 			net_packet_dropped: null,
+			aisamplerate: null,
 			ai: {
 				samplerate: null,
 				audio_ok: null,
@@ -42,6 +43,7 @@ class HisiliconEncoderInstance extends InstanceBase {
 				height: null,
 				interlaced: null,
 				video_ok: null,
+				venc: [],
 			},
 			user: {
 				ts0: null,
@@ -119,7 +121,7 @@ class HisiliconEncoderInstance extends InstanceBase {
 				case 'TimeoutError':
 					this.updateStatus(
 						InstanceStatus.ConnectionFailure,
-						'Timeout - Check configuration and connection to the controller',
+						'Timeout - Check configuration and connection to the device',
 					)
 				case 'AbortError':
 					break
@@ -190,6 +192,7 @@ class HisiliconEncoderInstance extends InstanceBase {
 		this.data.memorytotal = status.memorytotal ?? null
 		this.data.net_packet_sent = status.net_packet_sent ?? null
 		this.data.net_packet_dropped = status.net_packet_dropped ?? null
+		this.data.aisamplerate = status.aisamplerate ?? null // legacy
 		this.data.ai.samplerate = status.ai?.samplerate ?? null
 		this.data.ai.audio_ok = status.ai?.audio_ok ?? null
 		this.data.vi.framerate = status.vi?.framerate ?? null
@@ -199,11 +202,51 @@ class HisiliconEncoderInstance extends InstanceBase {
 		this.data.vi.height = status.vi?.height ?? null
 		this.data.vi.interlaced = status.vi?.interlaced ?? null
 		this.data.vi.video_ok = status.vi?.video_ok ?? null
+		this.data.vi.venc = status.vi?.venc ?? null // Array of VENC objects
 		this.data.user.ts0 = status.user?.ts0 ?? null
 		this.data.user.flv0 = status.user?.flv0 ?? null
 		this.data.user.pri0 = status.user?.pri0 ?? null
 		this.data.user.web = status.user?.web ?? null
 		this.data.user.rtsp = status.user?.rtsp ?? null
+
+		function assignFlatVariables(dataArray) {
+			const flatVariables = {}
+
+			dataArray.forEach((item, index) => {
+				flatVariables[`stream_${index}_width`] = item.width ?? null
+				flatVariables[`stream_${index}_height`] = item.height ?? null
+				flatVariables[`stream_${index}_framerate`] = item.framerate ?? null
+				flatVariables[`stream_${index}_bitrate`] = item.bitrate ?? null
+				flatVariables[`stream_${index}_enable`] = item.enable ?? null
+				flatVariables[`stream_${index}_codec`] = item.codec ?? null
+
+				if (item.ts_url0) {
+					flatVariables[`stream_${index}_ts_url`] = item.ts_url0
+				}
+				if (item.flv_url0) {
+					flatVariables[`stream_${index}_flv_url`] = item.flv_url0
+				}
+				if (item.rtmp_publish_url) {
+					flatVariables[`stream_${index}_rtmp_publish_url`] = item.rtmp_publish_url
+				}
+				if (item.srt_publish_url0) {
+					flatVariables[`stream_${index}_srt_publish_url`] = item.srt_publish_url0
+				}
+				if (item.fmp4_url0) {
+					flatVariables[`stream_${index}_fmp4_url`] = item.fmp4_url0
+				}
+				if (item.jpg_url0) {
+					flatVariables[`stream_${index}_jpg_url`] = item.jpg_url0
+				}
+				if (item.mjpg_url0) {
+					flatVariables[`stream_${index}_mjpg_url`] = item.mjpg_url0
+				}
+			})
+
+			return flatVariables
+		}
+
+		console.log('data', status.vi.venc)
 	}
 
 	// Return config fields for web config

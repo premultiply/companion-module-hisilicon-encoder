@@ -1,0 +1,33 @@
+{
+	"id": "hisilicon-encoder",
+	"name": "hisilicon-encoder",
+	"shortname": "Video Encoder",
+	"description": "Companion module for HiSilicon H.264/H.265 Video Encoder",
+	"version": "1.0.0",
+	"license": "MIT",
+	"repository": "git+https://github.com/bitfocus/companion-module-hisilicon-encoder.git",
+	"bugs": "https://github.com/bitfocus/companion-module-hisilicon-encoder/issues",
+	"maintainers": [
+		{
+			"name": "premultiply",
+			"email": "4681172+premultiply@users.noreply.github.com"
+		}
+	],
+	"legacyIds": [],
+	"runtime": {
+		"type": "node22",
+		"api": "nodejs-ipc",
+		"apiVersion": "0.0.0",
+		"entrypoint": "../src/index.js"
+	},
+	"manufacturer": "HiSilicon",
+	"products": [
+		"H.264/H.265 Video Encoder"
+	],
+	"keywords": [
+		"HiSilicon",
+		"Encoder",
+		"Video",
+		"Streaming"
+	]
+}

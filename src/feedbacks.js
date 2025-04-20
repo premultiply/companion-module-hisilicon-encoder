@@ -12,10 +12,10 @@ export function setFeedbacks(self) {
 	const colorPurple = combineRgb(255, 0, 255)
 	const colorBlack = combineRgb(0, 0, 0)
 
-	feedbacks.inputValid = {
+	feedbacks.inputSignal = {
 		type: 'boolean',
-		name: 'Input Signal valid',
-		description: 'Indicates whether a valid input signal has been detected and locked',
+		name: 'Input Signal status',
+		description: 'Indicates whether a valid input signal has been detected',
 		defaultStyle: {
 			color: colorWhite,
 			bgcolor: colorGreen,
@@ -23,87 +23,99 @@ export function setFeedbacks(self) {
 		options: [],
 		callback: function () {
 			return (
-				self.data.vi.video_ok !== 0 && self.data.ai.audio_ok !== 0 && self.data.vi.framerate > 0 && self.data.aitick > 0
+				self.data.vi.framerate > 0 && self.data.vi.video_ok !== 0 && self.data.aitick > 0 && self.data.ai.audio_ok !== 0
 			)
 		},
 	}
 
-	feedbacks.inputInvalid = {
+	feedbacks.streamUsed = {
 		type: 'boolean',
-		name: 'Input Signal invalid',
-		description: 'Indicates whether there is a problem with the input signal',
+		name: `Stream usage`,
+		description: `Indicates whether the selected stream encoder is in use`,
 		defaultStyle: {
 			color: colorWhite,
-			bgcolor: colorRed,
+			bgcolor: colorGreen,
 		},
-		options: [],
-		callback: function () {
-			return (
-				self.data.vi.video_ok === 0 ||
-				self.data.ai.audio_ok === 0 ||
-				self.data.vi.framerate === 0 ||
-				self.data.aitick === 0
-			)
+		options: [
+			{
+				type: 'checkbox',
+				label: 'Use',
+				id: 'use',
+				default: true,
+			},
+			{
+				type: 'dropdown',
+				label: 'Stream',
+				id: 'stream',
+				default: 0,
+				choices: [
+					{ id: 0, label: 'Stream 1 (Main)' },
+					{ id: 1, label: 'Stream 2 (Sub)' },
+					{ id: 2, label: 'Stream 3 (Sub)' },
+					{ id: 3, label: 'Stream 4 (Sub)' },
+				],
+			},
+		],
+		callback: function (feedback) {
+			return self.data.vi.venc[feedback.options.stream].no_use === (feedback.options.use ? 0 : 1)
 		},
 	}
 
-	self.data.vi.venc.forEach((item, index) => {
-		feedbacks[`rtmpConnected_stream${index}`] = {
-			type: 'boolean',
-			name: `Stream ${index + 1}: RTMP Push connected`,
-			description: `Indicates whether the RTMP Push connection for Stream ${index + 1} is established`,
-			defaultStyle: {
-				color: colorWhite,
-				bgcolor: colorGreen,
+	feedbacks.streamConnection = {
+		type: 'boolean',
+		name: `Stream connection status`,
+		description: `Indicates whether the selected type of outgoing stream is connected, not connected or disabled`,
+		defaultStyle: {
+			color: colorWhite,
+			bgcolor: colorGreen,
+		},
+		options: [
+			{
+				type: 'dropdown',
+				label: 'Type',
+				id: 'type',
+				default: 'rtmp',
+				choices: [
+					{ id: 'rtmp', label: 'RTMP Push' },
+					{ id: 'srt', label: 'SRT Caller' },
+					{ id: 'hls', label: 'HLS Push' },
+				],
 			},
-			options: [],
-			callback: function () {
-				return item.rtmp_status === 0
+			{
+				type: 'dropdown',
+				label: 'Status',
+				id: 'status',
+				default: 0,
+				choices: [
+					{ id: 0, label: 'Connected' },
+					{ id: -1, label: 'Not connected' },
+					{ id: null, label: 'Disabled' },
+				],
 			},
-		}
-
-		feedbacks[`rtmpNotConnected_stream${index}`] = {
-			type: 'boolean',
-			name: `Stream ${index + 1}: RTMP Push not connected`,
-			description: `Indicates whether the RTMP Push connection for Stream ${index + 1} is not established`,
-			defaultStyle: {
-				color: colorWhite,
-				bgcolor: colorRed,
+			{
+				type: 'dropdown',
+				label: 'Stream',
+				id: 'stream',
+				default: 0,
+				choices: [
+					{ id: 0, label: 'Stream 1 (Main)' },
+					{ id: 1, label: 'Stream 2 (Sub)' },
+					{ id: 2, label: 'Stream 3 (Sub)' },
+					{ id: 3, label: 'Stream 4 (Sub)' },
+				],
 			},
-			options: [],
-			callback: function () {
-				return item.rtmp_status === -1
-			},
-		}
-
-		feedbacks[`srtConnected_stream${index}`] = {
-			type: 'boolean',
-			name: `Stream ${index + 1}: SRT Caller connected`,
-			description: `Indicates whether the SRT Caller connection for Stream ${index + 1} is established`,
-			defaultStyle: {
-				color: colorWhite,
-				bgcolor: colorGreen,
-			},
-			options: [],
-			callback: function () {
-				return item.srt_publish_status === 0
-			},
-		}
-
-		feedbacks[`srtNotConnected_stream${index}`] = {
-			type: 'boolean',
-			name: `Stream ${index + 1}: SRT Caller not connected`,
-			description: `Indicates whether the SRT Caller connection for Stream ${index + 1} is not established`,
-			defaultStyle: {
-				color: colorWhite,
-				bgcolor: colorRed,
-			},
-			options: [],
-			callback: function () {
-				return item.srt_publish_status === -1
-			},
-		}
-	})
+		],
+		callback: function (feedback) {
+			switch (feedback.options.type) {
+				case 'rtmp':
+					return self.data.vi.venc[feedback.options.stream].rtmp_status === feedback.options.status
+				case 'srt':
+					return self.data.vi.venc[feedback.options.stream].srt_publish_status === feedback.options.status
+				case 'hls':
+					return self.data.vi.venc[feedback.options.stream].hls_publish_status === feedback.options.status
+			}
+		},
+	}
 
 	return feedbacks
 }

@@ -34,7 +34,7 @@ export function setActions(self) {
 		},
 	}
 
-	actions.srtPush = {
+	actions.srtCaller = {
 		name: 'SRT Caller',
 		options: [
 			{

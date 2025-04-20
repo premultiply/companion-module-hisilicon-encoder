@@ -45,10 +45,15 @@ class HisiliconEncoderInstance extends InstanceBase {
 				interlaced: null,
 				video_ok: null,
 				venc: Array.from({ length: 4 }, () => ({
+					no_use: null,
 					bitrate: null,
 					codec: null,
+					width: null,
+					height: null,
+					framerate: null,
 					rtmp_status: null,
 					srt_publish_status: null,
+					hls_publish_status: null,
 				})),
 			},
 			user: {
@@ -208,10 +213,15 @@ class HisiliconEncoderInstance extends InstanceBase {
 		this.data.vi.interlaced = status.vi?.interlaced ?? null
 		this.data.vi.video_ok = status.vi?.video_ok ?? null
 		for (let i = 0; i < 4; i++) {
+			this.data.vi.venc[i].no_use = status.vi?.venc[i]?.no_use ?? null
 			this.data.vi.venc[i].bitrate = status.vi?.venc[i]?.bitrate ?? null
 			this.data.vi.venc[i].codec = status.vi?.venc[i]?.codec ?? null
+			this.data.vi.venc[i].width = status.vi?.venc[i]?.width ?? null
+			this.data.vi.venc[i].height = status.vi?.venc[i]?.height ?? null
+			this.data.vi.venc[i].framerate = status.vi?.venc[i]?.framerate ?? null
 			this.data.vi.venc[i].rtmp_status = status.vi?.venc[i]?.rtmp_status ?? null
 			this.data.vi.venc[i].srt_publish_status = status.vi?.venc[i]?.srt_publish_status ?? null
+			this.data.vi.venc[i].hls_publish_status = status.vi?.venc[i]?.hls_publish_status ?? null
 		}
 		this.data.user.ts0 = status.user?.ts0 ?? null
 		this.data.user.flv0 = status.user?.flv0 ?? null
@@ -219,7 +229,7 @@ class HisiliconEncoderInstance extends InstanceBase {
 		this.data.user.web = status.user?.web ?? null
 		this.data.user.rtsp = status.user?.rtsp ?? null
 
-		//console.log('data', status.vi.venc)
+		//console.log(this.data.vi.venc)
 	}
 
 	// Return config fields for web config

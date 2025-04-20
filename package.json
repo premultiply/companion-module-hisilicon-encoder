@@ -1,5 +1,5 @@
 {
-	"name": "hisilicon-encoder",
+	"name": "neworange-encoder",
 	"version": "1.0.0",
 	"main": "src/index.js",
 	"type": "module",
@@ -11,7 +11,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/bitfocus/companion-module-hisilicon-encoder.git"
+		"url": "git+https://github.com/bitfocus/companion-module-neworange-encoder.git"
 	},
 	"license": "MIT",
 	"dependencies": {

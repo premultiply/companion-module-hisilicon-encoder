@@ -6,6 +6,8 @@ export const ConfigFields = [
 		id: 'host',
 		label: 'IP address / Hostname',
 		width: 5,
+		default: '192.168.1.168',
+		regex: Regex.HOSTNAME,
 	},
 	{
 		type: 'number',
@@ -14,5 +16,21 @@ export const ConfigFields = [
 		width: 4,
 		default: 80,
 		regex: Regex.PORT,
+	},
+	{
+		type: 'textinput',
+		id: 'user',
+		label: 'Username',
+		default: 'admin',
+		regex: Regex.SOMETHING,
+		width: 5,
+	},
+	{
+		type: 'textinput',
+		id: 'password',
+		label: 'Password',
+		default: 'admin',
+		regex: Regex.SOMETHING,
+		width: 5,
 	},
 ]

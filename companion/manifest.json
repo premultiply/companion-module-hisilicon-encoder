@@ -1,12 +1,12 @@
 {
-	"id": "hisilicon-encoder",
-	"name": "hisilicon-encoder",
+	"id": "neworange-encoder",
+	"name": "neworange-encoder",
 	"shortname": "Video Encoder",
-	"description": "Companion module for HiSilicon H.264/H.265 Video Encoder",
+	"description": "Companion module for H.264/H.265 IP streaming video encoder devices based on HiSilicon or Amabrella SoC",
 	"version": "1.0.0",
 	"license": "MIT",
-	"repository": "git+https://github.com/bitfocus/companion-module-hisilicon-encoder.git",
-	"bugs": "https://github.com/bitfocus/companion-module-hisilicon-encoder/issues",
+	"repository": "git+https://github.com/bitfocus/companion-module-neworange-encoder.git",
+	"bugs": "https://github.com/bitfocus/companion-module-neworange-encoder/issues",
 	"maintainers": [
 		{
 			"name": "premultiply",
@@ -20,14 +20,37 @@
 		"apiVersion": "0.0.0",
 		"entrypoint": "../src/index.js"
 	},
-	"manufacturer": "HiSilicon",
+	"manufacturer": "New Orange Technology",
 	"products": [
 		"H.264/H.265 Video Encoder"
 	],
 	"keywords": [
+		"AVC",
+		"HEVC",
+		"New Orange Technology",
 		"HiSilicon",
+		"Amabrella",
 		"Encoder",
+		"HDMI",
+		"SDI",
 		"Video",
-		"Streaming"
+		"Streaming",
+		"IPTV",
+		"RTMP",
+		"RTSP",
+		"SRT",
+		"HLS",
+		"URayTech",
+		"J-Tech Digital",
+		"Pro Video Instruments",
+		"Network Technologies Incorporated (NTI)",
+		"Oupree",
+		"MINE Technology",
+		"Blankom",
+		"ISEEVY",
+		"Orivision",
+		"WorldKast",
+		"Digicast",
+		"DIVAR"
 	]
 }

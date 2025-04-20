@@ -17,9 +17,8 @@ export function setPresets(self) {
 		category: 'System',
 		name: 'Input Status',
 		style: {
-			text: 'Status \\n$(generic-module:vi_video_status) \\n$(generic-module:ai_audio_status) \\n',
-			size: '14',
-			alignment: 'right:center',
+			text: 'Input\\n\\nVideo:\\n$(generic-module:vi_format)\\n\\nAudio:\\n$(generic-module:ai_format)',
+			size: '7',
 			color: colorWhite,
 			bgcolor: colorBlack,
 		},
@@ -31,7 +30,7 @@ export function setPresets(self) {
 		],
 		feedbacks: [
 			{
-				feedbackId: 'inputValid',
+				feedbackId: 'inputSignal',
 				options: {},
 				style: {
 					color: colorWhite,
@@ -39,60 +38,68 @@ export function setPresets(self) {
 				},
 			},
 			{
-				feedbackId: 'inputInvalid',
+				feedbackId: 'inputSignal',
 				options: {},
 				style: {
 					color: colorWhite,
 					bgcolor: colorRed,
 				},
+				isInverted: true,
 			},
 		],
 	}
 
-	presets['inputFormat'] = {
-		type: 'button',
-		category: 'System',
-		name: 'Input Format',
-		style: {
-			text: 'Input \\n$(generic-module:vi_mode) \\n$(generic-module:ai_samplerate) Hz \\n',
-			size: '14',
-			alignment: 'right:center',
-			color: colorWhite,
-			bgcolor: colorBlack,
-		},
-		steps: [
-			{
-				down: [],
-				up: [],
+	self.data.vi.venc.forEach((item, index) => {
+		presets[`stream${index}_format`] = {
+			type: 'button',
+			category: 'System',
+			name: `Stream ${index + 1}: Encoding Format`,
+			style: {
+				text: `Stream ${index + 1}\\n\\n$(generic-module:stream${index}_codec)\\n$(generic-module:stream${index}_bitrate) kBit/s\\n$(generic-module:stream${index}_format)`,
+				size: '7',
+				color: colorWhite,
+				bgcolor: colorBlack,
 			},
-		],
-		feedbacks: [
-			{
-				feedbackId: 'inputValid',
-				options: {},
-				style: {
-					color: colorWhite,
-					bgcolor: colorGreen,
+			steps: [
+				{
+					down: [],
+					up: [],
 				},
-			},
-			{
-				feedbackId: 'inputInvalid',
-				options: {},
-				style: {
-					color: colorWhite,
-					bgcolor: colorRed,
+			],
+			feedbacks: [
+				{
+					feedbackId: 'streamUsed',
+					options: {
+						use: true,
+						stream: index,
+					},
+					style: {
+						color: colorWhite,
+						bgcolor: colorGreen,
+					},
 				},
-			},
-		],
-	}
+				{
+					feedbackId: 'streamUsed',
+					options: {
+						use: false,
+						stream: index,
+					},
+					style: {
+						color: colorWhite,
+						bgcolor: colorGrey,
+					},
+				},
+			],
+		}
+	})
 
 	presets['reboot'] = {
 		type: 'button',
 		category: 'System',
 		name: 'Reboot Device (Hold for 2s)',
 		style: {
-			text: 'REBOOT\\n[Hold 2s]',
-			size: '14',
+			text: 'Reboot\\n↺',
+			size: '18',
 			color: colorWhite,
 			bgcolor: colorBlack,
 		},
@@ -117,78 +124,70 @@ export function setPresets(self) {
 		feedbacks: [],
 	}
 
-	self.data.vi.venc.forEach((_, index) => {
-		presets[`rtmpConnected_stream${index}`] = {
-			type: 'button',
-			category: 'System',
-			name: `Stream ${index + 1}: RTMP Push connected`,
-			style: {
-				text: `Stream ${index + 1}\\n\\nRTMP Push\\n\\n$(generic-module:vi_venc${index}_rtmp_status)`,
-				size: '7',
-				color: colorWhite,
-				bgcolor: colorBlack,
-			},
-			steps: [
-				{
-					down: [],
-					up: [],
-				},
-			],
-			feedbacks: [
-				{
-					feedbackId: `rtmpConnected_stream${index}`,
-					options: {},
-					style: {
-						color: colorWhite,
-						bgcolor: colorGreen,
-					},
-				},
-				{
-					feedbackId: `rtmpNotConnected_stream${index}`,
-					options: {},
-					style: {
-						color: colorWhite,
-						bgcolor: colorRed,
-					},
-				},
-			],
-		}
+	const streamTypes = [
+		{ id: 'rtmp', label: 'RTMP Push' },
+		{ id: 'srt', label: 'SRT Caller' },
+		{ id: 'hls', label: 'HLS Push' },
+	]
 
-		presets[`srtConnected_stream${index}`] = {
-			type: 'button',
-			category: 'System',
-			name: `Stream ${index + 1}: SRT Caller connected`,
-			style: {
-				text: `Stream ${index + 1}\\n\\nSRT Caller\\n\\n$(generic-module:vi_venc${index}_srt_status)`,
-				size: '7',
-				color: colorWhite,
-				bgcolor: colorBlack,
-			},
-			steps: [
-				{
-					down: [],
-					up: [],
+	streamTypes.forEach((streamType) => {
+		self.data.vi.venc.forEach((_, index) => {
+			presets[`stream${index}_${streamType.id}_status`] = {
+				type: 'button',
+				category: 'Stream Connection',
+				name: `Stream ${index + 1}: ${streamType.label} Connection Status`,
+				style: {
+					text: `Stream ${index + 1}\\n\\n${streamType.label}\\n\\n$(generic-module:stream${index}_${streamType.id}_status)`,
+					size: '7',
+					color: colorWhite,
+					bgcolor: colorBlack,
 				},
-			],
-			feedbacks: [
-				{
-					feedbackId: `srtConnected_stream${index}`,
-					options: {},
-					style: {
-						color: colorWhite,
-						bgcolor: colorGreen,
+				steps: [
+					{
+						down: [],
+						up: [],
 					},
-				},
-				{
-					feedbackId: `srtNotConnected_stream${index}`,
-					options: {},
-					style: {
-						color: colorWhite,
-						bgcolor: colorRed,
+				],
+				feedbacks: [
+					{
+						feedbackId: 'streamConnection',
+						options: {
+							type: streamType.id,
+							status: 0,
+							stream: index,
+						},
+						style: {
+							color: colorWhite,
+							bgcolor: colorGreen,
+						},
 					},
-				},
-			],
-		}
+					{
+						feedbackId: 'streamConnection',
+						options: {
+							type: streamType.id,
+							status: -1,
+							stream: index,
+						},
+						style: {
+							color: colorWhite,
+							bgcolor: colorRed,
+						},
+					},
+					{
+						feedbackId: 'streamConnection',
+						options: {
+							type: streamType.id,
+							status: null,
+							stream: index,
+						},
+						style: {
+							color: colorGrey,
+							bgcolor: colorBlack,
+						},
+					},
+				],
+			}
+		})
 	})
 
 	return presets

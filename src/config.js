@@ -10,7 +10,7 @@ export const ConfigFields = [
 	{
 		type: 'number',
 		id: 'port',
-		label: 'API port (default: 80)',
+		label: 'HTTP port (default: 80)',
 		width: 4,
 		default: 80,
 		regex: Regex.PORT,

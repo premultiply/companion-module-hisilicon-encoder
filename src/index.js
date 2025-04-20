@@ -31,6 +31,7 @@ class HisiliconEncoderInstance extends InstanceBase {
 			net_packet_sent: null,
 			net_packet_dropped: null,
 			aisamplerate: null,
+			aitick: null,
 			ai: {
 				samplerate: null,
 				audio_ok: null,
@@ -43,7 +44,12 @@ class HisiliconEncoderInstance extends InstanceBase {
 				height: null,
 				interlaced: null,
 				video_ok: null,
-				venc: [],
+				venc: Array.from({ length: 4 }, () => ({
+					bitrate: null,
+					codec: null,
+					rtmp_status: null,
+					srt_publish_status: null,
+				})),
 			},
 			user: {
 				ts0: null,
@@ -76,7 +82,6 @@ class HisiliconEncoderInstance extends InstanceBase {
 	async destroy() {
 		this.disablePolling()
 		this.controller.abort()
-		this.clearSession()
 		this.updateStatus(InstanceStatus.Disconnected)
 	}
 
@@ -84,7 +89,6 @@ class HisiliconEncoderInstance extends InstanceBase {
 	async configUpdated(config) {
 		this.disablePolling()
 		this.controller.abort()
-		this.clearSession()
 		this.updateStatus(InstanceStatus.Disconnected, 'Config changed')
 
 		this.init(config)
@@ -193,6 +197,7 @@ class HisiliconEncoderInstance extends InstanceBase {
 		this.data.net_packet_sent = status.net_packet_sent ?? null
 		this.data.net_packet_dropped = status.net_packet_dropped ?? null
 		this.data.aisamplerate = status.aisamplerate ?? null // legacy
+		this.data.aitick = status.aitick ?? null // legacy
 		this.data.ai.samplerate = status.ai?.samplerate ?? null
 		this.data.ai.audio_ok = status.ai?.audio_ok ?? null
 		this.data.vi.framerate = status.vi?.framerate ?? null
@@ -202,51 +207,19 @@ class HisiliconEncoderInstance extends InstanceBase {
 		this.data.vi.height = status.vi?.height ?? null
 		this.data.vi.interlaced = status.vi?.interlaced ?? null
 		this.data.vi.video_ok = status.vi?.video_ok ?? null
-		this.data.vi.venc = status.vi?.venc ?? null // Array of VENC objects
+		for (let i = 0; i < 4; i++) {
+			this.data.vi.venc[i].bitrate = status.vi?.venc[i]?.bitrate ?? null
+			this.data.vi.venc[i].codec = status.vi?.venc[i]?.codec ?? null
+			this.data.vi.venc[i].rtmp_status = status.vi?.venc[i]?.rtmp_status ?? null
+			this.data.vi.venc[i].srt_publish_status = status.vi?.venc[i]?.srt_publish_status ?? null
+		}
 		this.data.user.ts0 = status.user?.ts0 ?? null
 		this.data.user.flv0 = status.user?.flv0 ?? null
 		this.data.user.pri0 = status.user?.pri0 ?? null
 		this.data.user.web = status.user?.web ?? null
 		this.data.user.rtsp = status.user?.rtsp ?? null
 
-		function assignFlatVariables(dataArray) {
-			const flatVariables = {}
-
-			dataArray.forEach((item, index) => {
-				flatVariables[`stream_${index}_width`] = item.width ?? null
-				flatVariables[`stream_${index}_height`] = item.height ?? null
-				flatVariables[`stream_${index}_framerate`] = item.framerate ?? null
-				flatVariables[`stream_${index}_bitrate`] = item.bitrate ?? null
-				flatVariables[`stream_${index}_enable`] = item.enable ?? null
-				flatVariables[`stream_${index}_codec`] = item.codec ?? null
-
-				if (item.ts_url0) {
-					flatVariables[`stream_${index}_ts_url`] = item.ts_url0
-				}
-				if (item.flv_url0) {
-					flatVariables[`stream_${index}_flv_url`] = item.flv_url0
-				}
-				if (item.rtmp_publish_url) {
-					flatVariables[`stream_${index}_rtmp_publish_url`] = item.rtmp_publish_url
-				}
-				if (item.srt_publish_url0) {
-					flatVariables[`stream_${index}_srt_publish_url`] = item.srt_publish_url0
-				}
-				if (item.fmp4_url0) {
-					flatVariables[`stream_${index}_fmp4_url`] = item.fmp4_url0
-				}
-				if (item.jpg_url0) {
-					flatVariables[`stream_${index}_jpg_url`] = item.jpg_url0
-				}
-				if (item.mjpg_url0) {
-					flatVariables[`stream_${index}_mjpg_url`] = item.mjpg_url0
-				}
-			})
-
-			return flatVariables
-		}
-
-		console.log('data', status.vi.venc)
+		//console.log('data', status.vi.venc)
 	}
 
 	// Return config fields for web config

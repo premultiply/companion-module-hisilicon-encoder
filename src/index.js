@@ -17,53 +17,7 @@ class HisiliconEncoderInstance extends InstanceBase {
 	}
 
 	async init(config) {
-		this.data = {
-			version: null,
-			runtime: null,
-			systime: null,
-			buildtime: null,
-			cpuinfo: null,
-			vga_input: null,
-			sdi_input: null,
-			cpuusage: null,
-			memoryfree: null,
-			memorytotal: null,
-			net_packet_sent: null,
-			net_packet_dropped: null,
-			aisamplerate: null,
-			aitick: null,
-			ai: {
-				samplerate: null,
-				audio_ok: null,
-			},
-			vi: {
-				framerate: null,
-				int_cnt: null,
-				lost_int: null,
-				width: null,
-				height: null,
-				interlaced: null,
-				video_ok: null,
-				venc: Array.from({ length: 4 }, () => ({
-					no_use: null,
-					bitrate: null,
-					codec: null,
-					width: null,
-					height: null,
-					framerate: null,
-					rtmp_status: null,
-					srt_publish_status: null,
-					hls_publish_status: null,
-				})),
-			},
-			user: {
-				ts0: null,
-				flv0: null,
-				pri0: null,
-				web: null,
-				rtsp: null,
-			},
-		}
+		this.data = this.emptyCache()
 
 		this.config = config
 
@@ -111,6 +65,56 @@ class HisiliconEncoderInstance extends InstanceBase {
 		this.log('debug', 'Polling disabled')
 	}
 
+	emptyCache() {
+		return {
+			version: null,
+			runtime: null,
+			systime: null,
+			buildtime: null,
+			cpuinfo: null,
+			vga_input: null,
+			sdi_input: null,
+			cpuusage: null,
+			memoryfree: null,
+			memorytotal: null,
+			net_packet_sent: null,
+			net_packet_dropped: null,
+			aisamplerate: null,
+			aitick: null,
+			ai: {
+				samplerate: null,
+				audio_ok: null,
+			},
+			vi: {
+				framerate: null,
+				int_cnt: null,
+				lost_int: null,
+				width: null,
+				height: null,
+				interlaced: null,
+				video_ok: null,
+				venc: Array.from({ length: 4 }, () => ({
+					no_use: null,
+					bitrate: null,
+					codec: null,
+					width: null,
+					height: null,
+					framerate: null,
+					rtmp_status: null,
+					srt_publish_status: null,
+					hls_publish_status: null,
+				})),
+			},
+			user: {
+				ts0: null,
+				flv0: null,
+				pri0: null,
+				web: null,
+				rtsp: null,
+			},
+		}
+	}
+
 	async sendCommand(cmd) {
 		this.log('debug', 'sendCommand()')
 
@@ -132,6 +136,7 @@ class HisiliconEncoderInstance extends InstanceBase {
 						InstanceStatus.ConnectionFailure,
 						'Timeout - Check configuration and connection to the device',
 					)
+					this.data = this.emptyCache()
 				case 'AbortError':
 					break
 				default:
@@ -140,6 +145,9 @@ class HisiliconEncoderInstance extends InstanceBase {
 		} finally {
 			const dt = Date.now() - start
 			this.log('debug', `...returned after ${dt}ms.`)
+
+			this.checkVariables()
+			this.checkFeedbacks()
 		}
 	}
 
@@ -157,9 +165,6 @@ class HisiliconEncoderInstance extends InstanceBase {
 			await this.getAPI('get_status', options)
 
 			this.updateStatus(InstanceStatus.Ok)
-
-			this.checkVariables()
-			this.checkFeedbacks()
 		} catch (error) {
 			switch (error.name) {
 				case 'TimeoutError':
@@ -167,6 +172,7 @@ class HisiliconEncoderInstance extends InstanceBase {
 						InstanceStatus.ConnectionFailure,
 						'Timeout - Check configuration and connection to the controller',
 					)
+					this.data = this.emptyCache()
 				case 'AbortError':
 					break
 				default:
@@ -175,6 +181,9 @@ class HisiliconEncoderInstance extends InstanceBase {
 		} finally {
 			const dt = Date.now() - start
 			this.log('debug', `...returned after ${dt}ms.`)
+
+			this.checkVariables()
+			this.checkFeedbacks()
 		}
 	}
 

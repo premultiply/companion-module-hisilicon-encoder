@@ -124,9 +124,9 @@ export function checkVariables(self) {
 function translateCodec(codec) {
 	switch (codec) {
 		case 96:
-			return 'H.264'
+			return 'H.264/AVC'
 		case 265:
-			return 'HEVC'
+			return 'H.265/HEVC'
 		case 1002:
 			return 'MJPEG'
 		default:

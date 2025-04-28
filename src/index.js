@@ -9,7 +9,7 @@ import { ConfigFields } from './config.js'
 import { XMLParser } from 'fast-xml-parser'
 import { DigestClient } from 'digest-fetch'
 
-class HisiliconEncoderInstance extends InstanceBase {
+class NeworangeEncoderInstance extends InstanceBase {
 	constructor(internal) {
 		super(internal)
 
@@ -280,4 +280,4 @@ class HisiliconEncoderInstance extends InstanceBase {
 	}
 }
 
-runEntrypoint(HisiliconEncoderInstance)
+runEntrypoint(NeworangeEncoderInstance)

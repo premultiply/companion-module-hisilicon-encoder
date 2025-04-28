@@ -1267,19 +1267,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hisilicon-encoder@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "hisilicon-encoder@workspace:."
-  dependencies:
-    "@companion-module/base": "npm:~1.11.2"
-    "@companion-module/tools": "npm:^2.1.1"
-    digest-fetch: "npm:^3.1.1"
-    eslint: "npm:^9.24.0"
-    fast-xml-parser: "npm:^5.2.0"
-    prettier: "npm:^3.5.3"
-  languageName: unknown
-  linkType: soft
-
 "ignore@npm:^5.2.0, ignore@npm:^5.3.2":
   version: 5.3.2
   resolution: "ignore@npm:5.3.2"
@@ -1629,6 +1616,19 @@ __metadata:
   checksum: 10c0/c2f5a604a54a8ec5438a342e1f356dff4bc33ccccdb6dc668d94fe8e5eccfc9d2c2eea6064b0967a767ba63b33763f51ccf2cd2441b461a7322656c1f06b3f5d
   languageName: node
   linkType: hard
+
+"neworange-encoder@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "neworange-encoder@workspace:."
+  dependencies:
+    "@companion-module/base": "npm:~1.11.2"
+    "@companion-module/tools": "npm:^2.1.1"
+    digest-fetch: "npm:^3.1.1"
+    eslint: "npm:^9.24.0"
+    fast-xml-parser: "npm:^5.2.0"
+    prettier: "npm:^3.5.3"
+  languageName: unknown
+  linkType: soft
 
 "node-releases@npm:^2.0.19":
   version: 2.0.19

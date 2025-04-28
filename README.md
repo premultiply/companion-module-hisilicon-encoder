@@ -1,4 +1,4 @@
-# companion-module-hisilicon-encoder
+# companion-module-neworange-encoder
 
 See HELP.md and LICENSE
 

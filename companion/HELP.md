@@ -31,14 +31,70 @@ SoCs used:
 
 ## Actions
 
-- tbd
+- rtmpPush
+- srtCaller
+- reboot
 
 ## Variables
 
-- tbd
+- version
+- runtime
+- systime
+- buildtime
+- cpuinfo
+- vga_input
+- sdi_input
+- cpuusage
+- memoryfree
+- memorytotal
+- net_packet_sent
+- net_packet_dropped
+- ai_samplerate
+- ai_status
+- ai_format
+- vi_framerate
+- vi_int_cnt
+- vi_lost_int
+- vi_width
+- vi_height
+- vi_interlaced
+- vi_status
+- vi_mode
+- vi_format
+- stream0_codec
+- stream0_format
+- stream0_bitrate
+- stream0_rtmp_status
+- stream0_srt_status
+- stream0_hls_status
+- stream1_codec
+- stream1_format
+- stream1_bitrate
+- stream1_rtmp_status
+- stream1_srt_status
+- stream1_hls_status
+- stream2_codec
+- stream2_format
+- stream2_bitrate
+- stream2_rtmp_status
+- stream2_srt_status
+- stream2_hls_status
+- stream3_codec
+- stream3_format
+- stream3_bitrate
+- stream3_rtmp_status
+- stream3_srt_status
+- stream3_hls_status
+- user_ts
+- user_flv
+- user_pri
+- user_web
+- user_rtsp
 
 ## Feedbacks
 
-- tbd
+- inputSignal
+- streamUsed
+- streamConnection
 
-For additional actions, please raise a feature request on [GitHub](https://github.com/bitfocus/companion-neworange-encoder/).
+For additional actions, please raise a feature request on [GitHub](https://github.com/bitfocus/companion-module-neworange-encoder/).
